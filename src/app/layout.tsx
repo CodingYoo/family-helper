@@ -8,10 +8,14 @@ const inter = Inter({
   variable: "--font-inter",
 });
 
+// 检测是否为生产环境部署
+const isProduction = process.env.NODE_ENV === 'production';
+const basePath = isProduction ? '/family-helper' : '';
+
 export const metadata: Metadata = {
   title: "家庭助手 - 任务分配小程序",
   description: "让家务可见、可停机、可议价的家庭任务管理工具",
-  manifest: "/manifest.json",
+  manifest: basePath + "/manifest.webmanifest",
   themeColor: "#3b82f6",
   viewport: "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no",
   appleWebApp: {
@@ -21,11 +25,11 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      { url: "/icon-192x192.png", sizes: "192x192", type: "image/png" },
-      { url: "/icon-512x512.png", sizes: "512x512", type: "image/png" },
+      { url: basePath + "/icon-192x192.png", sizes: "192x192", type: "image/png" },
+      { url: basePath + "/icon-512x512.png", sizes: "512x512", type: "image/png" },
     ],
     apple: [
-      { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
+      { url: basePath + "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
     ],
   },
 };
@@ -41,7 +45,7 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="apple-mobile-web-app-title" content="家庭助手" />
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+        <link rel="apple-touch-icon" href={basePath + "/apple-touch-icon.png"} />
       </head>
       <body className={`${inter.variable} font-sans antialiased bg-gray-50 min-h-screen`}>
         <AppProvider>
