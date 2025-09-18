@@ -1,0 +1,227 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+  /* 移动端优化 */
+  overscroll-behavior: none;
+  -webkit-overflow-scrolling: touch;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* 移动端优化样式 */
+html {
+  height: 100vh;
+  height: calc(var(--vh, 1vh) * 100);
+}
+
+/* 允许特定元素的文本选择 */
+input, textarea, [contenteditable] {
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+}
+
+/* 移动端键盘打开时的样式调整 */
+body.keyboard-open {
+  height: auto;
+  min-height: 100vh;
+}
+
+/* 优化触摸目标大小 */
+button, [role="button"], input[type="button"], input[type="submit"] {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* 移除iOS默认样式 */
+input, textarea, button {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  border-radius: 0;
+}
+
+/* 触摸友好的按钮样式 */
+.btn-touch {
+  min-height: 44px;
+  min-width: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 150ms;
+}
+
+.btn-touch:active {
+  transform: scale(0.95);
+}
+
+/* 拖拽区域样式 */
+.drag-handle {
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+}
+
+.drag-handle:active {
+  cursor: grabbing;
+}
+
+/* 滚动容器优化 */
+.scroll-container {
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+}
+
+.scroll-container::-webkit-scrollbar {
+  width: 4px;
+}
+
+.scroll-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scroll-container::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 2px;
+}
+
+/* 视口高度工具类 */
+.h-screen-safe {
+  height: 100vh;
+  height: calc(var(--vh, 1vh) * 100);
+}
+
+.min-h-screen-safe {
+  min-height: 100vh;
+  min-height: calc(var(--vh, 1vh) * 100);
+}
+
+/* 减少动画模式支持 */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* 移动端专用优化 */
+@media (max-width: 768px) {
+  /* 任务卡片移动端优化 */
+  .task-card {
+    padding: 16px;
+    margin-bottom: 12px;
+    font-size: 14px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  /* 任务板列移动端优化 */
+  .task-board-column {
+    min-height: 300px;
+    padding: 12px;
+    margin: 0 4px;
+  }
+
+  /* 模态框移动端优化 */
+  .modal-content {
+    margin: 8px;
+    max-height: calc(100vh - 16px);
+    overflow-y: auto;
+    border-radius: 16px;
+  }
+
+  /* 按钮移动端优化 */
+  .btn-mobile {
+    min-height: 48px;
+    min-width: 48px;
+    font-size: 16px;
+    padding: 12px 16px;
+    border-radius: 12px;
+  }
+
+  /* 输入框移动端优化 */
+  input, textarea, select {
+    font-size: 16px !important; /* 防止iOS缩放 */
+    min-height: 48px;
+    padding: 12px 16px;
+    border-radius: 8px;
+  }
+
+  /* 拖拽项目移动端优化 */
+  .draggable-item {
+    touch-action: none;
+    user-select: none;
+    cursor: grab;
+  }
+
+  .draggable-item:active {
+    cursor: grabbing;
+    transform: scale(1.02);
+    z-index: 1000;
+  }
+}
+
+/* 滚动条隐藏工具类 */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* iOS Safari 专用优化 */
+@supports (-webkit-touch-callout: none) {
+  /* 安全区域适配 */
+  .ios-safe-area {
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  }
+
+  /* 视口高度修复 */
+  .ios-viewport-fix {
+    min-height: -webkit-fill-available;
+  }
+
+  /* iOS 输入框样式重置 */
+  input, textarea {
+    -webkit-appearance: none;
+    border-radius: 8px;
+  }
+
+  /* iOS 按钮样式重置 */
+  button {
+    -webkit-appearance: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+}
