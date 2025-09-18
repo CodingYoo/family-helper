@@ -52,7 +52,9 @@ export default function RootLayout({
             __html: `
               if ('serviceWorker' in navigator) {
                 window.addEventListener('load', function() {
-                  navigator.serviceWorker.register('/sw.js')
+                  // 动态获取正确的 Service Worker 路径
+                  const basePath = '${process.env.NODE_ENV === 'production' ? '/family-helper' : ''}';
+                  navigator.serviceWorker.register(basePath + '/sw.js')
                     .then(function(registration) {
                       console.log('SW registered: ', registration);
                     })
