@@ -1,10 +1,7 @@
 /**
  * 房间系统 - 支持多用户数据共享
  * 基于URL参数和localStorage实现，无需数据库
- * 集成WebRTC实现跨设备实时同步
  */
-
-import { WebRTCManager } from './webrtc'
 
 export interface RoomInfo {
   id: string
@@ -28,8 +25,6 @@ export class RoomManager {
   private broadcastChannel: BroadcastChannel | null = null
   private syncInterval: NodeJS.Timeout | null = null
   private onDataChangeCallback: (() => void) | null = null
-  private webrtcManager: WebRTCManager | null = null
-  private connectedPeers: Set<string> = new Set()
 
   private constructor() {
     // 从URL获取房间ID
@@ -148,9 +143,6 @@ export class RoomManager {
       }
     }
 
-    // 初始化WebRTC连接
-    await this.initializeWebRTC(roomId)
-
     // 设置定期同步（作为备用机制）
     if (this.syncInterval) {
       clearInterval(this.syncInterval)
@@ -159,56 +151,6 @@ export class RoomManager {
     this.syncInterval = setInterval(() => {
       this.updateLastSeen()
     }, 30000) // 每30秒更新一次在线状态
-  }
-
-  /**
-   * 初始化WebRTC连接
-   */
-  private async initializeWebRTC(roomId: string) {
-    try {
-      this.webrtcManager = WebRTCManager.getInstance()
-
-      await this.webrtcManager.initialize({
-        roomId: roomId,
-        deviceId: this.getUserId(),
-        onDataReceived: (data: any, senderId: string) => {
-          console.log('[Room] 收到来自', senderId, '的数据同步')
-          // 触发数据更新回调
-          if (this.onDataChangeCallback) {
-            this.onDataChangeCallback()
-          }
-        },
-        onPeerConnected: (peerId: string) => {
-          console.log('[Room] 设备连接:', peerId)
-          this.connectedPeers.add(peerId)
-          this.updateConnectedPeersStatus()
-        },
-        onPeerDisconnected: (peerId: string) => {
-          console.log('[Room] 设备断开:', peerId)
-          this.connectedPeers.delete(peerId)
-          this.updateConnectedPeersStatus()
-        }
-      })
-
-      console.log('[Room] WebRTC初始化完成')
-    } catch (error) {
-      console.error('[Room] WebRTC初始化失败:', error)
-    }
-  }
-
-  /**
-   * 更新连接设备状态
-   */
-  private updateConnectedPeersStatus() {
-    // 更新房间信息中的在线设备数量
-    if (this.currentRoomId) {
-      const roomInfo = this.getRoomInfo(this.currentRoomId)
-      if (roomInfo) {
-        roomInfo.memberCount = this.connectedPeers.size + 1 // +1 包括当前设备
-        roomInfo.lastActive = new Date().toISOString()
-        localStorage.setItem(`room:${this.currentRoomId}:info`, JSON.stringify(roomInfo))
-      }
-    }
   }
 
   /**
@@ -223,24 +165,6 @@ export class RoomManager {
         timestamp: Date.now()
       })
     }
-
-    // 跨设备WebRTC同步
-    if (this.webrtcManager) {
-      // 获取当前房间的所有数据
-      const roomData = this.getRoomData()
-      this.webrtcManager.syncData(roomData)
-    }
-  }
-
-  /**
-   * 获取房间数据
-   */
-  private getRoomData(): any {
-    if (!this.currentRoomId) return null
-
-    const dataKey = `room:${this.currentRoomId}:data`
-    const stored = localStorage.getItem(dataKey)
-    return stored ? JSON.parse(stored) : null
   }
 
   /**
@@ -356,24 +280,13 @@ export class RoomManager {
   }
 
   /**
-   * 获取连接的设备列表
-   */
-  getConnectedDevices(): string[] {
-    return this.webrtcManager ? this.webrtcManager.getConnectedPeers() : []
-  }
-
-  /**
    * 获取连接状态
    */
   getConnectionStatus(): {
     localSync: boolean
-    webrtcSync: boolean
-    connectedDevices: number
   } {
     return {
-      localSync: this.broadcastChannel !== null,
-      webrtcSync: this.webrtcManager !== null,
-      connectedDevices: this.connectedPeers.size
+      localSync: this.broadcastChannel !== null
     }
   }
 
@@ -390,13 +303,6 @@ export class RoomManager {
       clearInterval(this.syncInterval)
       this.syncInterval = null
     }
-
-    if (this.webrtcManager) {
-      this.webrtcManager.disconnect()
-      this.webrtcManager = null
-    }
-
-    this.connectedPeers.clear()
   }
 }
 

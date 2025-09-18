@@ -4,7 +4,6 @@ import React, { useState } from 'react'
 import { Family } from '@/lib/types'
 import { Button } from '@/components/ui/Button'
 import { formatTime } from '@/lib/utils'
-import ConnectionStatus, { ConnectionStatusModal } from './ConnectionStatus'
 
 interface HeaderProps {
   family: Family
@@ -16,7 +15,6 @@ interface HeaderProps {
 export function Header({ family, onShowStats, onShowTaskCreator, onShowTaskGrab }: HeaderProps) {
   const now = new Date()
   const currentTime = formatTime(now)
-  const [showConnectionModal, setShowConnectionModal] = useState(false)
 
   // 计算今日完成任务数
   const todayCompletedTasks = 0 // TODO: 从实际数据计算
@@ -37,13 +35,7 @@ export function Header({ family, onShowStats, onShowTaskCreator, onShowTaskGrab 
               </p>
             </div>
 
-            {/* 连接状态 */}
-            <div
-              className="cursor-pointer"
-              onClick={() => setShowConnectionModal(true)}
-            >
-              <ConnectionStatus />
-            </div>
+
           </div>
 
           {/* 中间：今日进度 */}
@@ -161,11 +153,7 @@ export function Header({ family, onShowStats, onShowTaskCreator, onShowTaskGrab 
         </div>
       </div>
 
-      {/* 连接状态详情模态框 */}
-      <ConnectionStatusModal
-        isOpen={showConnectionModal}
-        onClose={() => setShowConnectionModal(false)}
-      />
+
     </header>
   )
 }
