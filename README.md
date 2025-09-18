@@ -1,6 +1,10 @@
 # 家庭助手 - 任务分配小程序
 
-一个现代化的家庭任务管理 PWA 应用，支持多用户实时协作，完美适配移动设备。
+一个现代化的家庭任务管理 PWA 应用，让家务可见、可停机、可议价。支持多用户协作，完美适配移动设备。
+
+[![部署状态](https://github.com/CodingYoo/family-helper/actions/workflows/deploy.yml/badge.svg)](https://github.com/CodingYoo/family-helper/actions/workflows/deploy.yml)
+[![在线访问](https://img.shields.io/badge/在线访问-lph.ink/family--helper-blue)](https://lph.ink/family-helper/)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
 ## ✨ 主要功能
 
@@ -35,13 +39,13 @@
 
 ### 在线使用
 
-访问：[https://your-username.github.io/family-helper](https://your-username.github.io/family-helper)
+访问：[https://lph.ink/family-helper/](https://lph.ink/family-helper/)
 
 ### 本地开发
 
 ```bash
 # 克隆项目
-git clone https://github.com/your-username/family-helper.git
+git clone https://github.com/CodingYoo/family-helper.git
 cd family-helper
 
 # 安装依赖
@@ -72,10 +76,10 @@ npm run build
 
 ### 房间功能
 
-- **实时同步**：所有成员的操作实时同步
-- **跨设备**：手机、平板、电脑无缝切换
+- **本地同步**：基于 localStorage 的数据存储
+- **跨标签页同步**：使用 BroadcastChannel API 实现实时同步
 - **离线支持**：网络断开时数据保存在本地
-- **自动恢复**：网络恢复时自动同步数据
+- **分享协作**：通过链接邀请家庭成员加入
 
 ## 🔧 技术架构
 
@@ -124,14 +128,15 @@ broadcastChannel.postMessage({
 - **缓存策略**：智能缓存管理
 - **懒加载**：组件延迟加载
 
-## 🚀 部署到 GitHub Pages
+## 🚀 部署指南
 
-### 自动部署
+### GitHub Pages 自动部署
 
-1. Fork 本项目到您的 GitHub 账户
-2. 在仓库设置中启用 GitHub Pages
-3. 选择 GitHub Actions 作为部署源
-4. 推送代码到 main 分支自动部署
+项目已配置 GitHub Actions 自动部署：
+
+1. 推送代码到 `main` 分支
+2. GitHub Actions 自动构建和部署
+3. 访问 `https://lph.ink/family-helper/`
 
 ### 手动部署
 
@@ -139,9 +144,43 @@ broadcastChannel.postMessage({
 # 构建静态文件
 npm run build
 
-# 部署到GitHub Pages
-# 将out目录内容上传到gh-pages分支
+# 使用部署脚本
+./deploy.ps1  # Windows
+./deploy.sh   # Linux/Mac
 ```
+
+### 其他平台部署
+
+支持部署到 Vercel、Netlify 等平台，详见 [DEPLOYMENT.md](DEPLOYMENT.md)
+
+## 📚 文档
+
+- [Wiki 文档](docs/WIKI.md) - 详细的使用和开发指南
+- [部署指南](DEPLOYMENT.md) - 各种平台的部署方法
+- [更新日志](CHANGELOG.md) - 版本更新记录
+
+## 🔧 故障排除
+
+### 常见问题
+
+1. **页面一直显示加载中**
+
+   - 检查网络连接
+   - 清除浏览器缓存
+   - 确认 JavaScript 已启用
+
+2. **PWA 安装失败**
+
+   - 使用 HTTPS 访问
+   - 检查浏览器兼容性
+   - 确认 manifest 文件可访问
+
+3. **数据同步异常**
+   - 清除 localStorage
+   - 重新创建房间
+   - 检查浏览器存储权限
+
+更多问题请查看 [Wiki 故障排除](docs/WIKI.md#故障排除) 章节。
 
 ## 🤝 贡献指南
 
@@ -150,22 +189,31 @@ npm run build
 ### 开发流程
 
 1. Fork 项目
-2. 创建功能分支
-3. 提交更改
-4. 创建 Pull Request
+2. 创建功能分支 (`git checkout -b feature/AmazingFeature`)
+3. 提交更改 (`git commit -m 'Add some AmazingFeature'`)
+4. 推送到分支 (`git push origin feature/AmazingFeature`)
+5. 创建 Pull Request
 
 ### 代码规范
 
-- 使用 TypeScript
-- 遵循 ESLint 规则
-- 编写单元测试
-- 更新文档
+- 使用 TypeScript 进行类型检查
+- 遵循 ESLint 代码规范
+- 编写清晰的提交信息
+- 更新相关文档
 
 ## 📄 许可证
 
 MIT License - 详见 [LICENSE](LICENSE) 文件
 
 ## 🙏 致谢
+
+感谢所有为这个项目做出贡献的开发者！
+
+## 📞 联系方式
+
+- 项目地址：[GitHub](https://github.com/CodingYoo/family-helper)
+- 在线体验：[https://lph.ink/family-helper/](https://lph.ink/family-helper/)
+- 问题反馈：[Issues](https://github.com/CodingYoo/family-helper/issues)
 
 - [Next.js](https://nextjs.org/) - React 框架
 - [TailwindCSS](https://tailwindcss.com/) - CSS 框架
